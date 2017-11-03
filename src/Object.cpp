@@ -4,18 +4,6 @@
 #include "../include/Maths.hpp"
 #include "../include/Object.hpp"
 
-Point VecteurFromPoints(const Point *_p1, const Point *_p2) {
-  Point res;
-  res.x = _p2->x - _p1->x;
-  res.y = _p2->y - _p1->y;
-  res.z = _p2->z - _p1->z;
-  return res;
-}
-
-Object::Object() {}
-
-Object::~Object() {}
-
 Object Object::readOFF(std::istream &is) {
   std::string magic;
   is >> magic;
@@ -26,12 +14,12 @@ Object Object::readOFF(std::istream &is) {
   Object obj;
   size_t arraySize;
   is >> arraySize;
-  obj._points.resize(arraySize);
+  obj._vertices.resize(arraySize);
   is >> arraySize;
   obj._faces.resize(arraySize);
   is >> arraySize;
 
-  for (Point &p : obj._points) {
+  for (Point &p : obj._vertices) {
     is >> p;
 
     if (obj._min.x > p.x)
@@ -60,22 +48,20 @@ Object Object::readOFF(std::istream &is) {
 }
 
 void Object::writeOFF(std::ostream &os) const {
-  os << "OFF\n" << _points.size() << ' ' << _faces.size() << ' ' << 0 << '\n';
-  for (const Point &p : _points)
+  os << "OFF\n" << _vertices.size() << ' ' << _faces.size() << ' ' << 0 << '\n';
+  for (const Point &p : _vertices)
     os << p << '\n';
   for (const Face &f : _faces)
     os << f << '\n';
 }
 
 void Object::writeOBJ(std::ostream &os) const {
-  for (const Point &p : _points)
+  for (const Point &p : _vertices)
     os << "v " << p << '\n';
-  for (int i = 0; i < _faces.size(); ++i)
+  for (size_t i = 0; i < _faces.size(); ++i)
     os << "vn " << Point(normale(*this, i).normalize(1)) << '\n';
-  for (int i = 0; i < _faces.size(); ++i) {
-      const Face &f = _faces[i];
-    os << "f " << f.s0+1 << "//" << i+1 << ' ' << f.s1+1  << "//" << i+1<< ' ' << f.s2+1  << "//" << i+1<< '\n';
-}
-  //   os << "f " << f.s0 << "\\\\1" << ' ' << f.s1 << "\\\\1" << ' ' << f.s2 <<
-  //   "\\\\1" << '\n';
+  for (size_t i = 0; i < _faces.size(); ++i) {
+    const Face &f = _faces[i];
+    os << "f " << f.v0+1 << "//" << i+1 << ' ' << f.v1+1  << "//" << i+1<< ' ' << f.v2+1  << "//" << i+1<< '\n';
+  }
 }

@@ -9,14 +9,11 @@
 
 class Object {
 public:
-  // typedef std::deque std::deque;
+  Object() = default;
+  Object(const Object &) = default;
+  ~Object() = default;
 
-  Object();
-  Object(const Object &);
-  ~Object();
-
-  //renomer en vertices
-  inline const std::deque<Point> &points() const { return _points; }
+  inline const std::deque<Point> &vertices() const { return _vertices; }
   inline const std::deque<Face> &faces() const { return _faces; }
 
   inline const Point &min() const { return _min; }
@@ -29,7 +26,7 @@ public:
   void writeOBJ(std::ostream &) const;
 
 private:
-  std::deque<Point> _points;
+  std::deque<Point> _vertices;
   std::deque<Face> _faces;
 
   Point _min;

@@ -3,14 +3,15 @@
 
 #include <iostream>
 
+// faire un template pour size_t et point
 class Face {
 public:
-  unsigned int s0, s1, s2;
+  size_t v0, v1, v2;
 
   Face();
   Face(const Face &);
-  Face(const unsigned int s0, const unsigned int s1, const unsigned int s2);
-  ~Face();
+  Face(const size_t v0, const size_t v1, const size_t v2);
+  ~Face() = default;
 
   Face &operator=(const Face &);
 

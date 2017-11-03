@@ -8,6 +8,7 @@
 #include <vector>
 
 Vector normale(const Object &obj, const size_t iFace);
+Vector normal(const Face &face);
 
 template <typename T, typename ForwardIt>
 T average(ForwardIt first, ForwardIt last) {
