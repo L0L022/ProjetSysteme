@@ -1,8 +1,8 @@
 #include <iostream>
 #include <string>
 
-#include "../include/Maths.hpp"
-#include "../include/Object.hpp"
+#include <lib/Maths.hpp>
+#include <lib/Object.hpp>
 
 Object Object::readOFF(std::istream &is) {
   std::string magic;

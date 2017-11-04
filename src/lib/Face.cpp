@@ -1,4 +1,4 @@
-#include "../include/Face.hpp"
+#include <lib/Face.hpp>
 
 Face::Face() : v0(0), v1(0), v2(0) {}
 

@@ -1,7 +1,7 @@
-#include "../include/Maths.hpp"
-#include "../include/Object.hpp"
-#include "../include/SequentialNormalCalculation.hpp"
-#include "../include/Vector.hpp"
+#include <lib/Maths.hpp>
+#include <lib/Object.hpp>
+#include <lib/SequentialNormalCalculation.hpp>
+#include <lib/Vector.hpp>
 #include <algorithm>
 #include <fstream>
 #include <limits>

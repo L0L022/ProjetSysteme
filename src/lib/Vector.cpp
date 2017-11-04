@@ -1,5 +1,5 @@
-#include "../include/Point.hpp"
-#include "../include/Vector.hpp"
+#include <lib/Point.hpp>
+#include <lib/Vector.hpp>
 #include <cmath>
 
 Vector::Vector() {

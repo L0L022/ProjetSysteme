@@ -1,5 +1,5 @@
-#include "../include/Maths.hpp"
-#include "../include/SequentialNormalCalculation.hpp"
+#include <lib/Maths.hpp>
+#include <lib/SequentialNormalCalculation.hpp>
 
 SequentialNormalCalculation::SequentialNormalCalculation(const Object &object)
     : NormalCalculation(object) {}
