@@ -6,6 +6,7 @@
 
 #include "Face.hpp"
 #include "Point.hpp"
+#include "Vector.hpp"
 
 class Object {
 public:
@@ -23,7 +24,7 @@ public:
   static Object readOFF(std::istream &);
   void writeOFF(std::ostream &) const;
 
-  void writeOBJ(std::ostream &) const;
+  void writeOBJ(std::ostream &, const std::deque<Vector> &vertexNormal) const;
 
 private:
   std::deque<Point> _vertices;

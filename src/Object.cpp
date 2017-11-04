@@ -40,9 +40,7 @@ Object Object::readOFF(std::istream &is) {
   for (Face &f : obj._faces)
     is >> f;
 
-  obj._centroid.x = (obj._max.x + obj._min.x) / 2.0;
-  obj._centroid.y = (obj._max.y + obj._min.y) / 2.0;
-  obj._centroid.z = (obj._max.z + obj._min.z) / 2.0;
+  obj._centroid = (obj._max + obj._min) / 2.0;
 
   return obj;
 }
@@ -55,13 +53,17 @@ void Object::writeOFF(std::ostream &os) const {
     os << f << '\n';
 }
 
-void Object::writeOBJ(std::ostream &os) const {
+void Object::writeOBJ(std::ostream &os,
+                      const std::deque<Vector> &vertexNormal) const {
+  if (_vertices.size() != vertexNormal.size())
+    throw std::runtime_error(
+        "La taille de vertices et vertexNormal ne correspondes pas");
+
   for (const Point &p : _vertices)
     os << "v " << p << '\n';
-  for (size_t i = 0; i < _faces.size(); ++i)
-    os << "vn " << Point(normale(*this, i).normalize(1)) << '\n';
-  for (size_t i = 0; i < _faces.size(); ++i) {
-    const Face &f = _faces[i];
-    os << "f " << f.v0+1 << "//" << i+1 << ' ' << f.v1+1  << "//" << i+1<< ' ' << f.v2+1  << "//" << i+1<< '\n';
-  }
+  for (const Vector &v : vertexNormal)
+    os << "vn " << v << '\n';
+  for (const Face &f : _faces)
+    os << "f " << f.v0 + 1 << "//" << f.v0 + 1 << ' ' << f.v1 + 1 << "//"
+       << f.v1 + 1 << ' ' << f.v2 + 1 << "//" << f.v2 + 1 << '\n';
 }
