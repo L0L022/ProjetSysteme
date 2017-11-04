@@ -1,6 +1,8 @@
 #ifndef VECTOR_HPP
 #define VECTOR_HPP
 
+#include <iostream>
+
 class Point;
 
 /*! \class Vector
@@ -43,6 +45,9 @@ public:
 
   Vector normalize(const double lg); // normalise un vecteur a la longueur lg
   double length();                   // longueur du vecteur
+
+  friend std::ostream &operator<<(std::ostream &, const Vector &);
+  friend std::istream &operator>>(std::istream &, Vector &);
 };
 
 #endif

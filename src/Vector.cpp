@@ -157,3 +157,11 @@ Vector Vector::normalize(const double lg) {
 }
 
 double Vector::length() { return (sqrt(x * x + y * y + z * z)); }
+
+std::ostream &operator<<(std::ostream &os, const Vector &v) {
+  return os << v.x << ' ' << v.y << ' ' << v.z;
+}
+
+std::istream &operator>>(std::istream &is, Vector &v) {
+  return is >> v.x >> v.y >> v.z;
+}
