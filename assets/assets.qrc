@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/assets">
+        <file>bouddha1m.off</file>
+        <file>bouddha10k.off</file>
+        <file>bouddha500k.off</file>
+        <file>can1k5.off</file>
+        <file>sphere.off</file>
+    </qresource>
+</RCC>
