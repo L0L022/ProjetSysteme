@@ -2,6 +2,7 @@
 #define NORMALCALCULATION_HPP
 
 #include "Object.hpp"
+#include "Vector.hpp"
 #include <deque>
 
 class NormalCalculation {
@@ -9,13 +10,13 @@ public:
   NormalCalculation(const Object &object);
   virtual ~NormalCalculation();
 
-  const Object &object() const { return _object; }
-
-  virtual void calculateFaceNormal() = 0;
+  inline const Object &object() const { return _object; }
   inline const std::deque<Vector> &faceNormal() const { return _faceNormal; }
+  inline const std::deque<Vector> &vertexNormal() const {
+    return _vertexNormal;
+  }
 
-  virtual void calculateVertexNormal() = 0;
-  inline const std::deque<Vector> &vertexNormal() const { return _vertexNormal; }
+  virtual void calculate() = 0;
 
 protected:
   const Object &_object;
