@@ -1,14 +1,13 @@
 #ifndef MATHS_HPP
 #define MATHS_HPP
 
-#include "Face.hpp"
 #include "Object.hpp"
-#include "Vector.hpp"
 
 #include <vector>
 
-Vector normale(const Object &obj, const size_t iFace);
-Vector normal(const Face &face);
+namespace Maths {
+
+Vector normal(const Object &obj, const size_t iFace);
 
 template <typename T, typename ForwardIt>
 T average(ForwardIt first, ForwardIt last) {
@@ -20,5 +19,7 @@ T average(ForwardIt first, ForwardIt last) {
 
   return res / count;
 }
+
+} // namespace Maths
 
 #endif
