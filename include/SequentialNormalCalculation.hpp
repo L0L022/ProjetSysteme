@@ -7,8 +7,7 @@ class SequentialNormalCalculation : public NormalCalculation {
 public:
   SequentialNormalCalculation(const Object &object);
 
-  void calculateFaceNormal();
-  void calculateVertexNormal();
+  void calculate();
 };
 
 #endif
