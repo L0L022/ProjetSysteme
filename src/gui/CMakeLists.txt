@@ -18,5 +18,5 @@ find_package(Qt53DQuickExtras)
 
 add_executable(gui ${gui_SRC} ${QML_DIR}/qml.qrc)
 target_link_libraries(gui common_lib)
-
 target_link_libraries(gui Qt5::Core Qt5::Widgets Qt5::Qml Qt5::Quick)
+install(TARGETS gui DESTINATION bin RENAME ${PROJECT_NAME}-gui)
