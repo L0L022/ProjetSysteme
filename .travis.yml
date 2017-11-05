@@ -1,0 +1,64 @@
+language: cpp
+sudo: require
+dist: trusty
+
+compiler: gcc
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+      - george-edison55-precise-backports
+    packages:
+      - g++-7
+      - cmake-data
+      - cmake
+      - doxygen
+
+before_install:
+    - sudo add-apt-repository ppa:beineri/opt-qt592-trusty -y
+    - sudo apt-get update -qq
+
+install:
+    - sudo apt-get -y install qt59base qt59quickcontrols qt593d
+    - source /opt/qt*/bin/qt*-env.sh
+
+script:
+  - mkdir build && cd build
+  - cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Debug ..
+  - make gui -j$(nproc)
+  - make DESTDIR=appdir install ; find appdir/
+
+after_sucess:
+  - make doc # lance les tests unitaires & cppcheck & clang-tidy & doxygen
+
+before_deploy: #c'est buggé apparament
+  - wget -c "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
+  - chmod a+x linuxdeployqt*.AppImage
+  - unset QTDIR; unset QT_PLUGIN_PATH ; unset LD_LIBRARY_PATH
+  - ./linuxdeployqt*.AppImage ./appdir/usr/share/applications/*.desktop -bundle-non-qt-libs -qmldir=qml
+  - ./linuxdeployqt*.AppImage ./appdir/usr/share/applications/*.desktop -bundle-non-qt-libs -qmldir=qml
+  - find ./appdir -executable -type f -exec ldd {} \; | grep " => /usr" | cut -d " " -f 2-3 | sort | uniq
+  - wget "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage"
+  - chmod a+x appimagetool-x86_64.AppImage
+  - APPIMAGE="./ProjetSysteme-$(git rev-parse --abbrev-ref HEAD)-x86_64.AppImage"
+  - ./appimagetool-x86_64.AppImage --bintray-user $BINTRAY_USER --bintray-repo $BINTRAY_REPO ./appdir --updateinformation --no-appstream --verbose "$APPIMAGE"
+  - wget https://raw.githubusercontent.com/probonopd/AppImages/master/bintray.sh
+  - chmod a+x ./bintray.sh
+  - wget https://raw.githubusercontent.com/probonopd/AppImages/master/bintray-tidy.sh
+  - chmod a+x ./bintray-tidy.sh
+  - ./bintray.sh "$APPIMAGE" || exit 1
+
+deploy:
+  - provider: pages
+    skip_cleanup: true
+    github_token: $GITHUB_TOKEN
+    local_dir: html
+    on:
+      branch: master
+  - provider: releases
+    api_key: $GITHUB_TOKEN
+    file: $APPIMAGE
+    skip_cleanup: true
+    on:
+      tags: true
