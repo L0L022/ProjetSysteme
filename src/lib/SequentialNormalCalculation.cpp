@@ -1,10 +1,13 @@
 #include <lib/Maths.hpp>
 #include <lib/SequentialNormalCalculation.hpp>
 
-SequentialNormalCalculation::SequentialNormalCalculation(const Object &object)
-    : NormalCalculation(object) {}
+SequentialNormalCalculation::SequentialNormalCalculation(const Object& object)
+  : NormalCalculation(object)
+{}
 
-void SequentialNormalCalculation::calculate() {
+void
+SequentialNormalCalculation::calculate()
+{
   _faceNormal.clear();
   _vertexNormal.clear();
 
@@ -15,7 +18,7 @@ void SequentialNormalCalculation::calculate() {
     Vector normal = Maths::normal(_object, i);
     _faceNormal.push_back(normal);
 
-    const Face &f = _object.faces()[i];
+    const Face& f = _object.faces()[i];
 
     sumPoint[f.v0] += normal;
     ++nbPoint[f.v0];

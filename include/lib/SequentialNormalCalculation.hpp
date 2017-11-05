@@ -3,9 +3,10 @@
 
 #include "NormalCalculation.hpp"
 
-class SequentialNormalCalculation : public NormalCalculation {
+class SequentialNormalCalculation : public NormalCalculation
+{
 public:
-  SequentialNormalCalculation(const Object &object);
+  SequentialNormalCalculation(const Object& object);
 
   void calculate();
 };

@@ -8,23 +8,24 @@
 #include "Point.hpp"
 #include "Vector.hpp"
 
-class Object {
+class Object
+{
 public:
   Object() = default;
-  Object(const Object &) = default;
+  Object(const Object&) = default;
   ~Object() = default;
 
-  inline const std::deque<Point> &vertices() const { return _vertices; }
-  inline const std::deque<Face> &faces() const { return _faces; }
+  inline const std::deque<Point>& vertices() const { return _vertices; }
+  inline const std::deque<Face>& faces() const { return _faces; }
 
-  inline const Point &min() const { return _min; }
-  inline const Point &max() const { return _max; }
-  inline const Point &centroid() const { return _centroid; }
+  inline const Point& min() const { return _min; }
+  inline const Point& max() const { return _max; }
+  inline const Point& centroid() const { return _centroid; }
 
-  static Object readOFF(std::istream &);
-  void writeOFF(std::ostream &) const;
+  static Object readOFF(std::istream&);
+  void writeOFF(std::ostream&) const;
 
-  void writeOBJ(std::ostream &, const std::deque<Vector> &vertexNormal) const;
+  void writeOBJ(std::ostream&, const std::deque<Vector>& vertexNormal) const;
 
 private:
   std::deque<Point> _vertices;

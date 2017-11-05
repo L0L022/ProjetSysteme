@@ -1,7 +1,9 @@
 #include <QApplication>
 #include <QQmlApplicationEngine>
 
-int main(int argc, char *argv[]) {
+int
+main(int argc, char* argv[])
+{
   QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
   QApplication app(argc, argv);
   QQmlApplicationEngine engine;

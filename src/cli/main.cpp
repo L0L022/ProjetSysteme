@@ -1,16 +1,19 @@
-#include <lib/Maths.hpp>
-#include <lib/Object.hpp>
-#include <lib/SequentialNormalCalculation.hpp>
-#include <lib/Vector.hpp>
 #include <algorithm>
 #include <fstream>
 #include <limits>
 #include <sstream>
 #include <vector>
 
+#include <lib/Maths.hpp>
+#include <lib/Object.hpp>
+#include <lib/SequentialNormalCalculation.hpp>
+#include <lib/Vector.hpp>
+
 using namespace std;
 
-int main(int argc, char *argv[]) {
+int
+main(int argc, char* argv[])
+{
   ifstream fichier(argv[1], std::ios::binary);
   stringstream ss;
   ss << fichier.rdbuf();
