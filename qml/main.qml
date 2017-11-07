@@ -2,6 +2,15 @@ import QtQml 2.2
 import QtQuick 2.7
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.3
+import QtQuick.Dialogs 1.2
+import QtQuick.Scene3D 2.0
+
+import Qt3D.Core 2.0
+import Qt3D.Render 2.0
+import Qt3D.Input 2.0
+import Qt3D.Extras 2.0
+
+import lib 1.0
 
 ApplicationWindow {
     id: window
@@ -17,6 +26,7 @@ ApplicationWindow {
             MenuItem {
                 text: qsTr("Open a file")
                 iconName: "document-open"
+                onTriggered: openFileDialog.open()
             }
 
             Menu {
@@ -54,6 +64,7 @@ ApplicationWindow {
             MenuItem {
                 text: qsTr("Quit")
                 iconName: "application-exit"
+                onTriggered: Qt.quit()
             }
         }
 
@@ -82,6 +93,7 @@ ApplicationWindow {
     toolBar: ToolBar {
         Row {
             anchors.fill: parent
+            spacing: 3
 
             RowLayout {
                 Label {
@@ -89,7 +101,7 @@ ApplicationWindow {
                 }
 
                 ComboBox {
-                    model: [ "Sequentiel", "OpenMP", "pThread" ]
+                    model: [ "Sequential", "OpenMP", "pThread" ]
                 }
             }
 
@@ -127,7 +139,80 @@ ApplicationWindow {
     statusBar: StatusBar {
         RowLayout {
             anchors.fill: parent
-            Label { text: "1265 vertices | 456 faces" }
+            Label { text: qsTr("%1 vertices | %2 faces").arg(obj.nbVertices).arg(obj.nbFaces) }
+        }
+    }
+
+    Object {
+        id: obj
+    }
+
+    FileDialog {
+        id: openFileDialog
+        title: "Please choose an object"
+        folder: shortcuts.home
+        nameFilters: [ "OFF files (*.off)", "All files (*)" ]
+        onAccepted: {
+            console.log("Read OFF : "+fileUrl);
+            obj.readOFF(fileUrl);
+        }
+    }
+
+    Scene3D {
+        id: scene3d
+        anchors.fill: parent
+        focus: true
+        aspects: ["input", "logic"]
+        cameraAspectRatioMode: Scene3D.AutomaticAspectRatio
+
+        Entity {
+            id: sceneRoot
+
+            Camera {
+                id: camera
+                projectionType: CameraLens.PerspectiveProjection
+                fieldOfView: 45
+                nearPlane : 0.1
+                farPlane : 1000.0
+                position: Qt.vector3d( 0.0, 0.0, 40.0 )
+                upVector: Qt.vector3d( 0.0, 1.0, 0.0 )
+                viewCenter: Qt.vector3d( 0.0, 0.0, 0.0 )
+            }
+
+            FirstPersonCameraController { camera: camera }
+
+            components: [
+                RenderSettings {
+                    activeFrameGraph: ForwardRenderer {
+                        camera: camera
+                        clearColor: "transparent"
+                    }
+                },
+                InputSettings { }
+            ]
+
+            PhongMaterial {
+                id: material
+            }
+
+            TorusMesh {
+                id: torusMesh
+                radius: 5
+                minorRadius: 1
+                rings: 100
+                slices: 20
+            }
+
+            Transform {
+                id: torusTransform
+                scale3D: Qt.vector3d(1.5, 1, 0.5)
+                rotation: fromAxisAndAngle(Qt.vector3d(1, 0, 0), 45)
+            }
+
+            Entity {
+                id: torusEntity
+                components: [ torusMesh, material, torusTransform ]
+            }
         }
     }
 }
