@@ -1,4 +1,4 @@
-set(gui_SRC main.cpp)
+set(gui_SRC Object.cpp main.cpp)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
