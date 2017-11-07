@@ -10,6 +10,13 @@ namespace lib {
 class NormalCalculation
 {
 public:
+  enum class Method
+  {
+    Sequential,
+    pThread,
+    OpenMp
+  };
+
   NormalCalculation(const Object& object);
   virtual ~NormalCalculation();
 
@@ -21,6 +28,8 @@ public:
   }
 
   virtual void calculate() = 0;
+
+  static NormalCalculation* factory(const Method m, const Object& o);
 
 protected:
   const Object& _object;
