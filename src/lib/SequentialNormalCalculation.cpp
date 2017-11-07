@@ -14,7 +14,7 @@ SequentialNormalCalculation::calculate()
   std::deque<Point> sumPoint(_object.vertices().size());
   std::deque<unsigned int> nbPoint(_object.vertices().size(), 0);
 
-  for (size_t i = 0; i < _object.faces().size(); ++i) {
+  for (size_t i = 0; i < _object.faces().size(); ++i) { //itération 0 -> taille; taille -> 0; random : modifi la performance
     Vector normal = Maths::normal(_object, i);
     _faceNormal.push_back(normal);
 
