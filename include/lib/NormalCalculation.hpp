@@ -5,6 +5,8 @@
 #include "Vector.hpp"
 #include <deque>
 
+namespace lib {
+
 class NormalCalculation
 {
 public:
@@ -25,5 +27,7 @@ protected:
   std::deque<Vector> _faceNormal;
   std::deque<Vector> _vertexNormal;
 };
+
+}
 
 #endif

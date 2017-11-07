@@ -5,8 +5,10 @@
 #include <iostream>
 
 #include "Face.hpp"
-#include "Point.hpp"
+#include "Vertex.hpp"
 #include "Vector.hpp"
+
+namespace lib {
 
 class Object
 {
@@ -15,12 +17,12 @@ public:
   Object(const Object&) = default;
   ~Object() = default;
 
-  inline const std::deque<Point>& vertices() const { return _vertices; }
+  inline const std::deque<Vertex>& vertices() const { return _vertices; }
   inline const std::deque<Face>& faces() const { return _faces; }
 
-  inline const Point& min() const { return _min; }
-  inline const Point& max() const { return _max; }
-  inline const Point& centroid() const { return _centroid; }
+  inline const Vertex& min() const { return _min; }
+  inline const Vertex& max() const { return _max; }
+  inline const Vertex& centroid() const { return _centroid; }
 
   static Object readOFF(std::istream&);
   void writeOFF(std::ostream&) const;
@@ -28,12 +30,14 @@ public:
   void writeOBJ(std::ostream&, const std::deque<Vector>& vertexNormal) const;
 
 private:
-  std::deque<Point> _vertices;
+  std::deque<Vertex> _vertices;
   std::deque<Face> _faces;
 
-  Point _min;
-  Point _max;
-  Point _centroid;
+  Vertex _min;
+  Vertex _max;
+  Vertex _centroid;
 };
+
+}
 
 #endif

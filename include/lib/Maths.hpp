@@ -5,6 +5,8 @@
 
 #include <vector>
 
+namespace lib {
+
 namespace Maths {
 
 Vector
@@ -23,5 +25,7 @@ average(ForwardIt first, ForwardIt last)
 }
 
 } // namespace Maths
+
+}
 
 #endif

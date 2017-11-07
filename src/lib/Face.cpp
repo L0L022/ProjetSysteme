@@ -1,5 +1,7 @@
 #include <lib/Face.hpp>
 
+using namespace lib;
+
 Face::Face()
   : v0(0)
   , v1(0)
@@ -28,6 +30,8 @@ Face::operator=(const Face& f)
   return *this;
 }
 
+namespace lib {
+
 std::ostream&
 operator<<(std::ostream& os, const Face& f)
 {
@@ -43,4 +47,6 @@ operator>>(std::istream& is, Face& f)
   if (numVertices != 3) throw std::runtime_error("Can only read 3 vertices.");
 
   return is >> f.v0 >> f.v1 >> f.v2;
+}
+
 }

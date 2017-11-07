@@ -3,7 +3,9 @@
 
 #include <iostream>
 
-// faire un template pour size_t et point
+namespace lib {
+
+// faire un template pour size_t et Vertex
 class Face
 {
 public:
@@ -19,5 +21,7 @@ public:
   friend std::ostream& operator<<(std::ostream&, const Face&);
   friend std::istream& operator>>(std::istream&, Face&);
 };
+
+}
 
 #endif

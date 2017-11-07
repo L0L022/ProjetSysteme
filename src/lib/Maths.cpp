@@ -3,6 +3,8 @@
 #include <lib/Face.hpp>
 #include <lib/Vector.hpp>
 
+using namespace lib;
+
 Vector
 Maths::normal(const Object& obj, const size_t iFace)
 {

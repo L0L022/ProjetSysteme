@@ -3,13 +3,9 @@
 
 #include <iostream>
 
-class Point;
+namespace lib {
 
-/*! \class Vector
- * \bug nil
- * \warning nil
- * \version 1.0
- */
+class Vertex;
 
 class Vector
 {
@@ -20,17 +16,17 @@ public:
 
   Vector(); // (0,0,0) par defaut
   Vector(const double&, const double&, const double&);
-  Vector(const Point&);
-  Vector(const Point&, const Point&);
+  Vector(const Vertex&);
+  Vector(const Vertex&, const Vertex&);
   Vector(const Vector&);
   ~Vector();
 
   int operator==(const Vector& op) const;
   Vector& operator=(const Vector& op);
-  Vector& operator=(const Point& op);
+  Vector& operator=(const Vertex& op);
   Vector operator+() const;
   Vector operator+(const Vector&) const;
-  Vector operator+(const Point&) const;
+  Vector operator+(const Vertex&) const;
 
   Vector& operator+=(const Vector& op);
   Vector operator-() const;
@@ -50,5 +46,7 @@ public:
   friend std::ostream& operator<<(std::ostream&, const Vector&);
   friend std::istream& operator>>(std::istream&, Vector&);
 };
+
+}
 
 #endif

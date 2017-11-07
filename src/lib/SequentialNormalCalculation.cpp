@@ -1,6 +1,8 @@
 #include <lib/Maths.hpp>
 #include <lib/SequentialNormalCalculation.hpp>
 
+using namespace lib;
+
 SequentialNormalCalculation::SequentialNormalCalculation(const Object& object)
   : NormalCalculation(object)
 {}
@@ -11,8 +13,8 @@ SequentialNormalCalculation::calculate()
   _faceNormal.clear();
   _vertexNormal.clear();
 
-  std::deque<Point> sumPoint(_object.vertices().size());
-  std::deque<unsigned int> nbPoint(_object.vertices().size(), 0);
+  std::deque<Vertex> sumVertex(_object.vertices().size());
+  std::deque<unsigned int> nbVertex(_object.vertices().size(), 0);
 
   for (size_t i = 0; i < _object.faces().size(); ++i) { //itération 0 -> taille; taille -> 0; random : modifi la performance
     Vector normal = Maths::normal(_object, i);
@@ -20,16 +22,16 @@ SequentialNormalCalculation::calculate()
 
     const Face& f = _object.faces()[i];
 
-    sumPoint[f.v0] += normal;
-    ++nbPoint[f.v0];
+    sumVertex[f.v0] += normal;
+    ++nbVertex[f.v0];
 
-    sumPoint[f.v1] += normal;
-    ++nbPoint[f.v1];
+    sumVertex[f.v1] += normal;
+    ++nbVertex[f.v1];
 
-    sumPoint[f.v2] += normal;
-    ++nbPoint[f.v2];
+    sumVertex[f.v2] += normal;
+    ++nbVertex[f.v2];
   }
 
   for (size_t i = 0; i < _object.vertices().size(); ++i)
-    _vertexNormal.push_back(sumPoint[i] / nbPoint[i]);
+    _vertexNormal.push_back(sumVertex[i] / nbVertex[i]);
 }

@@ -10,6 +10,7 @@
 #include <lib/Vector.hpp>
 
 using namespace std;
+using namespace lib;
 
 int
 main(int argc, char* argv[])

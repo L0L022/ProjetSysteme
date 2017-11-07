@@ -3,6 +3,8 @@
 
 #include "NormalCalculation.hpp"
 
+namespace lib {
+
 class SequentialNormalCalculation : public NormalCalculation
 {
 public:
@@ -10,5 +12,7 @@ public:
 
   void calculate();
 };
+
+}
 
 #endif

@@ -1,6 +1,8 @@
 #include <cmath>
-#include <lib/Point.hpp>
+#include <lib/Vertex.hpp>
 #include <lib/Vector.hpp>
+
+using namespace lib;
 
 Vector::Vector()
 {
@@ -42,7 +44,7 @@ Vector::~Vector()
  * \author RR
  * \date 05/12/2006
  */
-Vector::Vector(const Point& _P)
+Vector::Vector(const Vertex& _P)
 {
   x = _P.x;
   y = _P.y;
@@ -53,7 +55,7 @@ Vector::Vector(const Point& _P)
  * \author RR
  * \date 05/12/2006
  */
-Vector::Vector(const Point& _A, const Point& _B)
+Vector::Vector(const Vertex& _A, const Vertex& _B)
 {
   x = _B.x - _A.x;
   y = _B.y - _A.y;
@@ -76,7 +78,7 @@ Vector::operator=(const Vector& op)
 }
 
 Vector&
-Vector::operator=(const Point& op)
+Vector::operator=(const Vertex& op)
 {
   x = op.x;
   y = op.y;
@@ -100,7 +102,7 @@ Vector::operator+(const Vector& op) const
 /*! RR 02Juillet2008
  */
 Vector
-Vector::operator+(const Point& _p) const
+Vector::operator+(const Vertex& _p) const
 {
   return (Vector(x + _p.x, y + _p.y, z + _p.z));
 }
@@ -206,6 +208,8 @@ Vector::length()
   return (sqrt(x * x + y * y + z * z));
 }
 
+namespace lib {
+
 std::ostream&
 operator<<(std::ostream& os, const Vector& v)
 {
@@ -216,4 +220,6 @@ std::istream&
 operator>>(std::istream& is, Vector& v)
 {
   return is >> v.x >> v.y >> v.z;
+}
+
 }
