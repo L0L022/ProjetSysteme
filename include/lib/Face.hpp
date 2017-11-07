@@ -1,5 +1,5 @@
-#ifndef FACE_HPP
-#define FACE_HPP
+#ifndef LIB_FACE_HPP
+#define LIB_FACE_HPP
 
 #include <iostream>
 
@@ -22,6 +22,6 @@ public:
   friend std::istream& operator>>(std::istream&, Face&);
 };
 
-}
+} // namespace lib
 
 #endif

@@ -1,5 +1,5 @@
-#ifndef VERTEX_HPP
-#define VERTEX_HPP
+#ifndef LIB_VERTEX_HPP
+#define LIB_VERTEX_HPP
 
 #include <iostream>
 
@@ -47,6 +47,6 @@ public:
   friend std::istream& operator>>(std::istream&, Vertex&);
 };
 
-}
+} // namespace lib
 
 #endif

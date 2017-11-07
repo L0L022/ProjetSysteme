@@ -1,5 +1,5 @@
-#ifndef SEQUENTIALNORMALCALCULATION_HPP
-#define SEQUENTIALNORMALCALCULATION_HPP
+#ifndef LIB_SEQUENTIALNORMALCALCULATION_HPP
+#define LIB_SEQUENTIALNORMALCALCULATION_HPP
 
 #include "NormalCalculation.hpp"
 
@@ -13,6 +13,6 @@ public:
   void calculate();
 };
 
-}
+} // namespace lib
 
 #endif

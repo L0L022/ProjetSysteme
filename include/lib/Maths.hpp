@@ -1,13 +1,11 @@
-#ifndef MATHS_HPP
-#define MATHS_HPP
+#ifndef LIB_MATHS_HPP
+#define LIB_MATHS_HPP
 
 #include "Object.hpp"
 
 #include <vector>
 
-namespace lib {
-
-namespace Maths {
+namespace lib { namespace Maths {
 
 Vector
 normal(const Object& obj, const size_t iFace);
@@ -24,8 +22,6 @@ average(ForwardIt first, ForwardIt last)
   return res / count;
 }
 
-} // namespace Maths
-
-}
+}} // namespace lib::Maths
 
 #endif

@@ -1,5 +1,5 @@
-#ifndef NORMALCALCULATION_HPP
-#define NORMALCALCULATION_HPP
+#ifndef LIB_NORMALCALCULATION_HPP
+#define LIB_NORMALCALCULATION_HPP
 
 #include "Object.hpp"
 #include "Vector.hpp"
@@ -28,6 +28,6 @@ protected:
   std::deque<Vector> _vertexNormal;
 };
 
-}
+} // namespace lib
 
 #endif

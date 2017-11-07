@@ -1,5 +1,5 @@
-#ifndef VECTOR_HPP
-#define VECTOR_HPP
+#ifndef LIB_VECTOR_HPP
+#define LIB_VECTOR_HPP
 
 #include <iostream>
 
@@ -47,6 +47,6 @@ public:
   friend std::istream& operator>>(std::istream&, Vector&);
 };
 
-}
+} // namespace lib
 
 #endif

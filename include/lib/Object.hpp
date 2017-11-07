@@ -1,12 +1,12 @@
-#ifndef OBJECT_HPP
-#define OBJECT_HPP
+#ifndef LIB_OBJECT_HPP
+#define LIB_OBJECT_HPP
 
 #include <deque>
 #include <iostream>
 
 #include "Face.hpp"
-#include "Vertex.hpp"
 #include "Vector.hpp"
+#include "Vertex.hpp"
 
 namespace lib {
 
@@ -38,6 +38,6 @@ private:
   Vertex _centroid;
 };
 
-}
+} // namespace lib
 
 #endif
