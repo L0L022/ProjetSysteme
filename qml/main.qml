@@ -139,12 +139,8 @@ ApplicationWindow {
     statusBar: StatusBar {
         RowLayout {
             anchors.fill: parent
-            Label { text: qsTr("%1 vertices | %2 faces").arg(obj.nbVertices).arg(obj.nbFaces) }
+            Label { text: qsTr("%1 vertices | %2 faces | centroid : %3 | min : %4 | max : %5").arg(obj.nbVertices).arg(obj.nbFaces).arg(obj.centroid.toString()).arg(obj.min.toString()).arg(obj.max.toString()) }
         }
-    }
-
-    Object {
-        id: obj
     }
 
     FileDialog {
@@ -155,6 +151,8 @@ ApplicationWindow {
         onAccepted: {
             console.log("Read OFF : "+fileUrl);
             obj.readOFF(fileUrl);
+            obj.load();
+            //sphereMesh.source = fileUrl;
         }
     }
 
@@ -169,49 +167,62 @@ ApplicationWindow {
             id: sceneRoot
 
             Camera {
-                id: camera
+                id: camer
                 projectionType: CameraLens.PerspectiveProjection
-                fieldOfView: 45
-                nearPlane : 0.1
+                fieldOfView: 22
+                nearPlane : 0.01
                 farPlane : 1000.0
-                position: Qt.vector3d( 0.0, 0.0, 40.0 )
+                position: Qt.vector3d( 0.0, 0.0, -10.0 )
                 upVector: Qt.vector3d( 0.0, 1.0, 0.0 )
                 viewCenter: Qt.vector3d( 0.0, 0.0, 0.0 )
             }
 
-            FirstPersonCameraController { camera: camera }
+            FirstPersonCameraController { camera: camer }
 
             components: [
                 RenderSettings {
                     activeFrameGraph: ForwardRenderer {
-                        camera: camera
-                        clearColor: "transparent"
+                        id: renderer
+                        camera: camer
+                        clearColor: "grey"
+
+                        RenderStateSet {
+                            CullFace {
+                                id: cullFace
+                                mode: CullFace.NoCulling
+                            }
+
+                            FrontFace {
+                                id: frontFace
+                                direction: FrontFace.ClockWise
+                            }
+                        }
                     }
                 },
                 InputSettings { }
             ]
 
-            PhongMaterial {
-                id: material
+
+            Object {
+                id: obj
             }
 
-            TorusMesh {
-                id: torusMesh
-                radius: 5
-                minorRadius: 1
-                rings: 100
-                slices: 20
+            SphereMesh {
+                id: me
+                radius: 3
             }
 
-            Transform {
-                id: torusTransform
-                scale3D: Qt.vector3d(1.5, 1, 0.5)
-                rotation: fromAxisAndAngle(Qt.vector3d(1, 0, 0), 45)
+            WireframeMaterial {
+                id: wireframeMaterial
+                effect: WireframeEffect {}
+                ambient: Qt.rgba( 0.2, 0.0, 0.0, 1.0 )
+                diffuse: Qt.rgba( 0.8, 0.0, 0.0, 1.0 )
             }
 
             Entity {
-                id: torusEntity
-                components: [ torusMesh, material, torusTransform ]
+                id: objEntity
+
+                components: [ obj, wireframeMaterial ]
             }
         }
     }

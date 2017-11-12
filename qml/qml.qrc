@@ -1,5 +1,7 @@
 <RCC>
     <qresource prefix="/qml">
         <file>main.qml</file>
+        <file>WireframeEffect.qml</file>
+        <file>WireframeMaterial.qml</file>
     </qresource>
 </RCC>

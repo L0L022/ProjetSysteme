@@ -5,6 +5,7 @@ project(ProjetSysteme)
 set(ASSETS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/assets)
 set(INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(QML_DIR ${CMAKE_CURRENT_SOURCE_DIR}/qml)
+set(SHADERS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/shaders)
 add_subdirectory(src)
 
 install(FILES ${PROJECT_NAME}.desktop DESTINATION share/applications)
