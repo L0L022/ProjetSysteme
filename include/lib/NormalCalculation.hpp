@@ -14,7 +14,7 @@ public:
   {
     Sequential,
     pThread,
-    OpenMp
+    OpenMP
   };
 
   NormalCalculation(const Object& object);
