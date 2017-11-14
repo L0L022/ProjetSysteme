@@ -11,56 +11,24 @@
 #include <lib/Object.hpp>
 #include <lib/Vector.hpp>
 
-#include <benchmark/Benchmark.hpp>
+#include <benchmark/benchmark.h>
 
 using namespace std;
 using namespace lib;
 
-struct BenchmarkInfo
-{
-  string name;
-  double mean;
-  double standardDeviation;
-};
-
-struct ObjectBenchmarkInfo
-{
-  string name;
-  size_t nbVertices;
-  size_t nbFaces;
-  vector<BenchmarkInfo> calculationInfo;
-};
-
-ObjectBenchmarkInfo
-test(const string& fileName)
-{
-  ifstream file(fileName, std::ios::binary);
-  if (!file.is_open()) throw runtime_exception("Can't open OFF file");
-
-  stringstream ss;
-  ss << file.rdbuf();
-
-  Object obj = Object::readOFF(ss);
-
-  ObjectBenchmarkInfo info;
-  info.name = fileName;
-  info.nbVertices = obj.vertices().size();
-  info.nbFaces = obj.faces().size();
-
+template <class ...ExtraArgs>
+static void BM_NormalCalculation(benchmark::State& state, ExtraArgs&&... extra_args) {
+  Object obj = Object::randGen(10, 10);
   auto method = NormalCalculation::Method::Sequential;
+  unique_ptr<NormalCalculation> calc(NormalCalculation::factory(extra_args..., obj));
+  if (!calc)
+    state.SkipWithError("Can't make NormalCalculation instance.");
 
-  unique_ptr<NormalCalculation> calc(NormalCalculation::factory(method, obj));
-  if (calc) {
+  for (auto _ : state)
     calc->calculate();
-  }
-
-  return info;
 }
+BENCHMARK_CAPTURE(BM_NormalCalculation, Sequential, NormalCalculation::Method::Sequential);
+// BENCHMARK_CAPTURE(BM_NormalCalculation, pThread, NormalCalculation::Method::pThread);
+BENCHMARK_CAPTURE(BM_NormalCalculation, OpenMP, NormalCalculation::Method::OpenMP);
 
-int
-main(int argc, char* argv[])
-{
-  cout.precision(std::numeric_limits<double>::digits10 +
-                 1); // ça marche avec ss ?
-  cin.precision(std::numeric_limits<double>::digits10 + 1);
-}
+BENCHMARK_MAIN();

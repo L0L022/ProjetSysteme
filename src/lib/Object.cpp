@@ -1,10 +1,29 @@
 #include <iostream>
 #include <string>
+#include <random>
+#include <limits>
 
 #include <lib/Maths.hpp>
 #include <lib/Object.hpp>
 
 using namespace lib;
+
+Object
+Object::randGen(const size_t nbVertices, const size_t nbFaces)
+{
+  Object obj;
+  std::default_random_engine gen;
+  std::uniform_real_distribution<double> realDist(std::numeric_limits<double>::min(), std::numeric_limits<double>::max());
+  std::uniform_int_distribution<size_t> intDist(0, nbVertices - 1);
+
+  for (size_t i = 0; i < nbVertices; ++i)
+    obj._vertices.emplace_back(realDist(gen), realDist(gen), realDist(gen));
+
+  for (size_t i = 0; i < nbFaces; i++)
+    obj._faces.emplace_back(intDist(gen), intDist(gen), intDist(gen));
+
+  return obj;
+}
 
 Object
 Object::readOFF(std::istream& is)

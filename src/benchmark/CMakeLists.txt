@@ -1,4 +1,6 @@
 set(benchmark_SRC main.cpp)
 
-add_executable(benchmark ${benchmark_SRC})
-target_link_libraries(benchmark common_lib)
+find_package(benchmark REQUIRED)
+add_executable(bench ${benchmark_SRC})
+target_link_libraries(bench common_lib)
+target_link_libraries(bench benchmark::benchmark)

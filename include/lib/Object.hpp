@@ -24,6 +24,8 @@ public:
   inline const Vertex& max() const { return _max; }
   inline const Vertex& centroid() const { return _centroid; }
 
+  static Object randGen(const size_t nbVertices, const size_t nbFaces);
+
   static Object readOFF(std::istream&);
   void writeOFF(std::ostream&) const;
 

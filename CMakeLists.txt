@@ -2,6 +2,13 @@ cmake_minimum_required(VERSION 3.0)
 
 project(ProjetSysteme)
 
+option(COMPILE_CLI "Compile cli application." ON)
+option(COMPILE_GUI "Compile gui application." OFF)
+option(COMPILE_BENCHMARK "Compile benchmark test." ON)
+
+set(benchmark_DIR "/home/e16006130/Téléchargements/bb/install/usr/local/lib/cmake/benchmark")
+list(APPEND CMAKE_MODULE_PATH "/home/e16006130/Téléchargements/bb/install/usr/local/lib/cmake")
+
 find_package(OpenMP REQUIRED)
 IF(OPENMP_FOUND)
   SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
