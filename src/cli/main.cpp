@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <cstdlib>
 #include <fstream>
 #include <limits>
 #include <memory>
@@ -17,13 +18,15 @@ using namespace lib;
 void
 printHelp()
 {
-  cout << "Usage : cli <OFF file> [sequential(default)|pthread|openmp]" << endl;
+  cout << "Usage : cli <OFF file> [sequential(default)|pthread|openmp] [nb "
+          "threads]"
+       << endl;
 }
 
 int
 main(int argc, char* argv[])
 {
-  if (argc != 2 and argc != 3) {
+  if (argc < 2 or argc > 4) {
     printHelp();
     return -1;
   }
@@ -55,6 +58,14 @@ main(int argc, char* argv[])
       method = NormalCalculation::Method::Sequential;
     if (strMethod == "pthread") method = NormalCalculation::Method::pThread;
     if (strMethod == "openmp") method = NormalCalculation::Method::OpenMP;
+  }
+
+  if (argc == 4) {
+    string nbThreads(argv[3]); // check valid number
+    if (method == NormalCalculation::Method::pThread)
+      setenv("NB_THREADS", nbThreads.c_str(), 1);
+    if (method == NormalCalculation::Method::OpenMP)
+      setenv("OMP_NUM_THREADS", nbThreads.c_str(), 1);
   }
 
   unique_ptr<NormalCalculation> calc(NormalCalculation::factory(method, obj));
