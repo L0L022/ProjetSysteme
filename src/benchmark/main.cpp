@@ -39,7 +39,7 @@ using namespace lib;
 //
 //   Object obj = Object::readOFF(ss);
 //
-//   unique_ptr<NormalCalculation> calc(
+//   shared_ptr<NormalCalculation> calc(
 //     NormalCalculation::factory(args.method, obj));
 //   if (!calc) state.SkipWithError("Can't make NormalCalculation instance.");
 //
@@ -57,7 +57,7 @@ using namespace lib;
 // {
 //   Object obj = Object::randGen(state.range(0), state.range(0));
 //   auto method = NormalCalculation::Method::Sequential;
-//   unique_ptr<NormalCalculation> calc(
+//   shared_ptr<NormalCalculation> calc(
 //     NormalCalculation::factory(extra_args..., obj));
 //   if (!calc) state.SkipWithError("Can't make NormalCalculation instance.");
 //
@@ -86,22 +86,44 @@ using namespace lib;
 //                   NormalCalculation::Method::OpenMP)
 //   ->Apply(ObjectRandArgs);
 
-auto BM_NormalCalculation = [](benchmark::State& state, auto Inputs)
+class ObjectLoader
 {
-  std::shared_ptr<NormalCalculation> calc(Inputs);
-  for (auto _ : state) calc->calculate();
+public:
+  ObjectLoader(lib::Object & object) : _obj(object) {}
+  virtual ~ObjectLoader() {};
+  virtual void load() = 0;
+
+protected:
+  lib::Object& _obj;
 };
 
-// class RandObject
-// {
-//   RandObject(size_t nbFaces, size_t nbVertices);
-//
-//
-//
-// private:
-//   const size_t nbFaces;
-//   const size_t nbVertices;
-// }
+class RandObjectLoader : public ObjectLoader
+{
+public:
+  const size_t nbVertices;
+  const size_t nbFaces;
+
+  RandObjectLoader(lib::Object& object, const size_t nbVertices, const size_t nbFaces)
+    : ObjectLoader(object), nbVertices(nbVertices), nbFaces(nbFaces) {}
+
+  void load() {
+    // if (_obj.)
+    _obj = Object::randGen(nbVertices, nbFaces);
+  }
+};
+
+struct BM_NormalCalculationArgs {
+  std::shared_ptr<ObjectLoader> objLoader;
+  std::shared_ptr<NormalCalculation> calc;
+};
+
+auto BM_NormalCalculation = [](benchmark::State& state, auto Inputs)
+{
+  BM_NormalCalculationArgs args(Inputs);
+  args.objLoader->load();
+  for (auto _ : state) args.calc->calculate();
+};
+
 // class get object, get() -> genObject static
 
 int main(int argc, char** argv) {
@@ -115,17 +137,20 @@ int main(int argc, char** argv) {
     name += "/V:";
     name += std::to_string(nbVertices);
 
-    objs.push_back(Object::randGen(nbVertices, nbFaces));
+    objs.emplace_back();
     Object & obj = objs.back();
 
+    BM_NormalCalculationArgs args;
+    args.objLoader = std::make_shared<RandObjectLoader>(obj, nbVertices, nbFaces);
+
     {
-      shared_ptr<NormalCalculation> calc(new SequentialNormalCalculation(obj));
-      benchmark::RegisterBenchmark((name+"/Sequential").c_str(), BM_NormalCalculation, calc);
+      args.calc = std::make_shared<SequentialNormalCalculation>(obj);
+      benchmark::RegisterBenchmark((name+"/Sequential").c_str(), BM_NormalCalculation, args);
     }
     {
-      for (int nbThreads : {2, 4, 8}) {
-        shared_ptr<NormalCalculation> calc(new OpenMPNormalCalculation(obj, nbThreads));
-        benchmark::RegisterBenchmark((name+"/OpenMP/"+std::to_string(nbThreads)).c_str(), BM_NormalCalculation, calc);
+      for (int nbThreads : {2, 3, 4, 8}) {
+        args.calc = std::make_shared<OpenMPNormalCalculation>(obj, nbThreads);
+        benchmark::RegisterBenchmark((name+"/OpenMP/"+std::to_string(nbThreads)).c_str(), BM_NormalCalculation, args);
       }
     }
   }
