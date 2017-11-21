@@ -40,6 +40,12 @@ OpenMPNormalCalculation::OpenMPNormalCalculation(const Object& object)
   : NormalCalculation(object)
 {}
 
+OpenMPNormalCalculation::OpenMPNormalCalculation(const Object& object, const size_t threadsAmount)
+: OpenMPNormalCalculation(object)
+{
+  omp_set_num_threads(threadsAmount);
+}
+
 void
 OpenMPNormalCalculation::calculate()
 {

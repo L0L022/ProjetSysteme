@@ -9,6 +9,7 @@ class OpenMPNormalCalculation : public NormalCalculation
 {
 public:
   OpenMPNormalCalculation(const Object& object);
+  OpenMPNormalCalculation(const Object& object, const size_t threadsAmount);
 
   void calculate();
 };
