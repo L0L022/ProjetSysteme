@@ -4,7 +4,7 @@ project(ProjetSysteme)
 
 option(COMPILE_CLI "Compile cli application." ON)
 option(COMPILE_GUI "Compile gui application." OFF)
-option(COMPILE_BENCHMARK "Compile benchmark test." ON)
+option(COMPILE_BENCHMARK "Compile benchmark test." OFF)
 
 set(benchmark_DIR "/home/e16006130/Téléchargements/bb/install/usr/local/lib/cmake/benchmark")
 list(APPEND CMAKE_MODULE_PATH "/home/e16006130/Téléchargements/bb/install/usr/local/lib/cmake")

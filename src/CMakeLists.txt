@@ -8,6 +8,6 @@ if (COMPILE_GUI)
   add_subdirectory(gui)
 endif()
 
-# if (COMPILE_BENCHMARK)
+if (COMPILE_BENCHMARK)
   add_subdirectory(benchmark)
-# endif()
+endif()

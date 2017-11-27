@@ -2,6 +2,7 @@
 
 #include <lib/OpenMPNormalCalculation.hpp>
 #include <lib/SequentialNormalCalculation.hpp>
+#include <lib/PThreadNormalCalculation.hpp>
 
 using namespace lib;
 
@@ -19,6 +20,8 @@ NormalCalculation::factory(const Method m, const Object& o)
       return new SequentialNormalCalculation(o);
     case Method::OpenMP:
       return new OpenMPNormalCalculation(o);
+    case Method::pThread:
+      return new PThreadNormalCalculation(o);
     default:
       return nullptr;
       break;
