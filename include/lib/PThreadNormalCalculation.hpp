@@ -14,9 +14,6 @@ public:
   void calculate();
 
 private:
-  static void* threadCalculate(void* arg);
-
-private:
   const size_t _threadsAmount;
 };
 

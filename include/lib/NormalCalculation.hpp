@@ -28,6 +28,7 @@ public:
   }
 
   virtual void calculate() = 0;
+  void clear();
 
   static NormalCalculation* factory(const Method m, const Object& o);
 

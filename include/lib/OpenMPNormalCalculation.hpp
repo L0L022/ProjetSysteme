@@ -3,6 +3,8 @@
 
 #include "NormalCalculation.hpp"
 
+#define OPENMPNORMALCALCULATION_USE_PRIVATE_VAR
+
 namespace lib {
 
 class OpenMPNormalCalculation : public NormalCalculation

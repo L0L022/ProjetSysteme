@@ -1,6 +1,7 @@
 #include <lib/Maths.hpp>
 #include <lib/PThreadNormalCalculation.hpp>
 
+#include <algorithm>
 #include <pthread.h>
 #include <thread>
 
@@ -34,51 +35,131 @@ private:
   Mutex& _m;
 };
 
-struct TMaterial {
+struct CommonMaterial
+{
+  const Object& object;
   std::deque<Mutex>& vMutex;
   std::deque<Vertex>& sumVertex;
   std::deque<unsigned int>& nbVertex;
+};
+
+struct Material
+{
+  CommonMaterial* cM;
+  size_t begin;
+  size_t end;
   std::deque<Vector> faceNormalPrivate;
   std::deque<Vector> vertexNormalPrivate;
 };
 
+void*
+normalCalc(void* arg)
+{
+  auto& m = *static_cast<Material*>(arg);
+  auto& _object = m.cM->object;
+  auto& vMutex = m.cM->vMutex;
+  auto& sumVertex = m.cM->sumVertex;
+  auto& nbVertex = m.cM->nbVertex;
+  auto& faceNormalPrivate = m.faceNormalPrivate;
+
+  for (size_t i = m.begin; i < m.end; ++i) {
+    Vector normal = Maths::normal(_object, i);
+    faceNormalPrivate.push_back(normal);
+
+    const Face& f = _object.faces()[i];
+    {
+      LockGuard lg(vMutex[f.v0]);
+      sumVertex[f.v0] += normal;
+      ++nbVertex[f.v0];
+    }
+    {
+      LockGuard lg(vMutex[f.v1]);
+      sumVertex[f.v1] += normal;
+      ++nbVertex[f.v1];
+    }
+    {
+      LockGuard lg(vMutex[f.v2]);
+      sumVertex[f.v2] += normal;
+      ++nbVertex[f.v2];
+    }
+  }
+  return NULL;
+}
+
+void*
+meanCalc(void* arg)
+{
+  auto& m = *static_cast<Material*>(arg);
+  auto& sumVertex = m.cM->sumVertex;
+  auto& nbVertex = m.cM->nbVertex;
+  auto& vertexNormalPrivate = m.vertexNormalPrivate;
+
+  for (size_t i = m.begin; i < m.end; ++i)
+    if (nbVertex[i] > 0)
+      vertexNormalPrivate.push_back(sumVertex[i] / nbVertex[i]);
+
+  return NULL;
+}
+
 PThreadNormalCalculation::PThreadNormalCalculation(const Object& object)
   : PThreadNormalCalculation(object, std::thread::hardware_concurrency())
-{}
+{
+}
 
-PThreadNormalCalculation::PThreadNormalCalculation(const Object& object, const size_t threadsAmount)
-: NormalCalculation(object), _threadsAmount(threadsAmount)
-{}
+PThreadNormalCalculation::PThreadNormalCalculation(const Object& object,
+                                                   const size_t threadsAmount)
+  : NormalCalculation(object)
+  , _threadsAmount(threadsAmount)
+{
+}
 
 void
 PThreadNormalCalculation::calculate()
 {
-  _faceNormal.clear();
-  _vertexNormal.clear();
+  clear();
 
   const size_t vertexCount = _object.vertices().size();
   std::deque<Mutex> vMutex(vertexCount);
   std::deque<Vertex> sumVertex(vertexCount);
   std::deque<unsigned int> nbVertex(vertexCount, 0);
 
-  std::vector<pthread_t> threads;
-  std::vector<TMaterial> tMaterials;
+  std::vector<pthread_t> threads(_threadsAmount);
+  std::vector<Material> materials(_threadsAmount);
 
-  for (size_t i = 0; i < _threadsAmount; ++i) {
-    tMaterials.push_back({vMutex, sumVertex, nbVertex});
-    TMaterial& m = tMaterials.back();
-    threads.emplace_back();
-    pthread_t& t = threads.back();
+  CommonMaterial cM{ _object, vMutex, sumVertex, nbVertex };
+  {
+    size_t count = _object.faces().size();
+    size_t work = count / _threadsAmount;
+    for (size_t i = 0; i < _threadsAmount; ++i) {
+      Material& m = materials.at(i);
+      m.cM = &cM;
+      m.begin = i * work;
+      m.end = std::min(i * work + work, count);
+      pthread_create(&threads.at(i), NULL, normalCalc, &m);
+    }
 
-    pthread_create(&t, NULL, PThreadNormalCalculation::threadCalculate, &m);
+    for (pthread_t& t : threads) pthread_join(t, NULL);
+  }
+  {
+    size_t count = vertexCount;
+    size_t work = count / _threadsAmount;
+    for (size_t i = 0; i < _threadsAmount; ++i) {
+      Material& m = materials.at(i);
+      m.cM = &cM;
+      m.begin = i * work;
+      m.end = std::min(i * work + work, count);
+      pthread_create(&threads.at(i), NULL, meanCalc, &m);
+    }
+
+    for (pthread_t& t : threads) pthread_join(t, NULL);
   }
 
-  for (size_t i = 0; i < _threadsAmount; i++)
-    pthread_join(&threads[i]);
-}
-
-void*
-PThreadNormalCalculation::threadCalculate(void* arg)
-{
-  TMaterial& m = *static_cast<TMaterial*>(arg);
+  for (Material& m : materials) {
+    _faceNormal.insert(_faceNormal.end(),
+                       m.faceNormalPrivate.begin(),
+                       m.faceNormalPrivate.end());
+    _vertexNormal.insert(_vertexNormal.end(),
+                         m.vertexNormalPrivate.begin(),
+                         m.vertexNormalPrivate.end());
+  }
 }

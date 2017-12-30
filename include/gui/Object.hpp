@@ -53,7 +53,7 @@ public slots:
   void load();
   void calculateNormals(const CalculNormalMethod m);
 
-  void readOFF(const QUrl& fileName);
+  void readOFF(const QString& fileName);
   void writeOFF(const QUrl& fileName) const;
   void writeOBJ(const QUrl& fileName) const;
 

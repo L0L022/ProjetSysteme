@@ -21,7 +21,7 @@ public:
   Vector(const Vector&);
   ~Vector();
 
-  int operator==(const Vector& op) const;
+  bool operator==(const Vector& op) const;
   Vector& operator=(const Vector& op);
   Vector& operator=(const Vertex& op);
   Vector operator+() const;

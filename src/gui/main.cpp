@@ -2,6 +2,7 @@
 #include <QOpenGLContext>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
+#include <QDir>
 
 #include <gui/Object.hpp>
 
@@ -24,6 +25,7 @@ main(int argc, char* argv[])
   qmlRegisterType<gui::Object>("lib", 1, 0, "Object");
 
   QQmlApplicationEngine engine;
+  engine.rootContext()->setContextProperty("assets", QDir(QStringLiteral(":/assets/")).entryList());
   engine.load(QUrl(QStringLiteral("qrc:///qml/main.qml")));
 
   return app.exec();

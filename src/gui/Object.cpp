@@ -3,6 +3,7 @@
 #include <fstream>
 #include <sstream>
 
+#include <QFile>
 #include <QDataStream>
 #include <QDebug>
 
@@ -138,14 +139,21 @@ Object::calculateNormals(const CalculNormalMethod m)
 }
 
 void
-Object::readOFF(const QUrl& fileName)
+Object::readOFF(const QString &fileName)
 {
-  ifstream file(fileName.toLocalFile().toStdString(), std::ios::binary);
+  QFile file(fileName);
+//  ifstream file(fileName.toLocalFile().toStdString(), std::ios::binary);
+  if (file.open(QIODevice::ReadOnly)) {
+//  file.setTextModeEnabled(false);
   stringstream ss;
-  ss << file.rdbuf();
+//  ss << file.rdbuf();
+  ss << file.readAll().toStdString();
   _object = lib::Object::readOFF(ss);
   emit objectChanged();
   load();
+  } else {
+      qDebug() << "Prout";
+  }
 }
 
 void

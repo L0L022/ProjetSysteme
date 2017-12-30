@@ -62,7 +62,7 @@ Vector::Vector(const Vertex& _A, const Vertex& _B)
   z = _B.z - _A.z;
 }
 
-int
+bool
 Vector::operator==(const Vector& op) const
 {
   return (x == op.x && y == op.y && z == op.z);

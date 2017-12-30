@@ -5,21 +5,26 @@ using namespace lib;
 
 SequentialNormalCalculation::SequentialNormalCalculation(const Object& object)
   : NormalCalculation(object)
-{}
+{
+}
 
 void
 SequentialNormalCalculation::calculate()
 {
-  _faceNormal.clear();
-  _vertexNormal.clear();
+  //clear();
 
-  std::deque<Vertex> sumVertex(_object.vertices().size());
-  std::deque<unsigned int> nbVertex(_object.vertices().size(), 0);
+  const size_t facesCount = _object.faces().size();
+  const size_t vertexCount = _object.vertices().size();
+  _faceNormal.resize(facesCount);
+  _vertexNormal.resize(vertexCount);
+
+  std::deque<Vertex> sumVertex(vertexCount);
+  std::deque<unsigned int> nbVertex(vertexCount, 0);
 
   // itération 0 -> taille; taille -> 0; random : modifi la performance
-  for (size_t i = 0; i < _object.faces().size(); ++i) {
+  for (size_t i = 0; i < facesCount; ++i) {
     Vector normal = Maths::normal(_object, i);
-    _faceNormal.push_back(normal);
+    _faceNormal[i] = normal;
 
     const Face& f = _object.faces()[i];
 
@@ -33,7 +38,7 @@ SequentialNormalCalculation::calculate()
     ++nbVertex[f.v2];
   }
 
-  for (size_t i = 0; i < _object.vertices().size(); ++i) {
-    if (nbVertex[i] != 0.0) _vertexNormal.push_back(sumVertex[i] / nbVertex[i]);
+  for (size_t i = 0; i < vertexCount; ++i) {
+    if (nbVertex[i] > 0) _vertexNormal[i] = sumVertex[i] / nbVertex[i];
   }
 }

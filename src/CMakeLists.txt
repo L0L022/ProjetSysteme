@@ -11,3 +11,7 @@ endif()
 if (COMPILE_BENCHMARK)
   add_subdirectory(benchmark)
 endif()
+
+if (COMPILE_TESTS)
+  add_subdirectory(tests)
+endif()

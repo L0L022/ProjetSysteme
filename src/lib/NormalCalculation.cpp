@@ -1,16 +1,24 @@
 #include <lib/NormalCalculation.hpp>
 
 #include <lib/OpenMPNormalCalculation.hpp>
-#include <lib/SequentialNormalCalculation.hpp>
 #include <lib/PThreadNormalCalculation.hpp>
+#include <lib/SequentialNormalCalculation.hpp>
 
 using namespace lib;
 
 NormalCalculation::NormalCalculation(const Object& object)
   : _object(object)
-{}
+{
+}
 
 NormalCalculation::~NormalCalculation() {}
+
+void
+NormalCalculation::clear()
+{
+  _faceNormal.clear();
+  _vertexNormal.clear();
+}
 
 NormalCalculation*
 NormalCalculation::factory(const Method m, const Object& o)

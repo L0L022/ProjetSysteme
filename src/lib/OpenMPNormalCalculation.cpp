@@ -14,7 +14,12 @@ class Mutex
 {
 public:
   Mutex() { omp_init_lock(&_m); }
-  ~Mutex() { omp_destroy_lock(&_m); }
+  ~Mutex() {
+      if (omp_test_lock(&_m))
+        omp_destroy_lock(&_m);
+      else
+        throw std::runtime_error("Mutex locked; can't destroyed it.");
+  }
 
 private:
   omp_lock_t _m;
@@ -38,10 +43,12 @@ private:
 
 OpenMPNormalCalculation::OpenMPNormalCalculation(const Object& object)
   : NormalCalculation(object)
-{}
+{
+}
 
-OpenMPNormalCalculation::OpenMPNormalCalculation(const Object& object, const size_t threadsAmount)
-: OpenMPNormalCalculation(object)
+OpenMPNormalCalculation::OpenMPNormalCalculation(const Object& object,
+                                                 const size_t threadsAmount)
+  : OpenMPNormalCalculation(object)
 {
   omp_set_num_threads(threadsAmount);
 }
@@ -49,25 +56,38 @@ OpenMPNormalCalculation::OpenMPNormalCalculation(const Object& object, const siz
 void
 OpenMPNormalCalculation::calculate()
 {
+  const size_t facesCount = _object.faces().size();
+  const size_t vertexCount = _object.vertices().size();
+
+#ifdef OPENMPNORMALCALCULATION_USE_PRIVATE_VAR
   _faceNormal.clear();
   _vertexNormal.clear();
+#else
+  _faceNormal.resize(facesCount);
+  _vertexNormal.resize(vertexCount);
+#endif
 
-  const size_t vertexCount = _object.vertices().size();
   std::deque<Mutex> vMutex(vertexCount);
+  std::deque<Vertex> sumVertex(vertexCount);
+  std::deque<unsigned int> nbVertex(vertexCount, 0);
 
-#pragma omp parallel default(none) shared(_object, vMutex)
+#pragma omp parallel default(none) shared(_object, vMutex, sumVertex, nbVertex)
   {
-    auto faceNormalPrivate = _faceNormal;
-    auto vertexNormalPrivate = _vertexNormal;
-
-    std::deque<Vertex> sumVertex(vertexCount);
-    std::deque<unsigned int> nbVertex(vertexCount, 0);
+#ifdef OPENMPNORMALCALCULATION_USE_PRIVATE_VAR
+      auto faceNormalPrivate = _faceNormal;
+      auto vertexNormalPrivate = _vertexNormal;
+#endif
 
     // itération 0 -> taille; taille -> 0; random : modif la performance
 #pragma omp for schedule(static)
-    for (size_t i = 0; i < _object.faces().size(); ++i) {
+    for (size_t i = 0; i < facesCount; ++i) {
       Vector normal = Maths::normal(_object, i);
-      faceNormalPrivate.push_back(normal);
+
+#ifdef OPENMPNORMALCALCULATION_USE_PRIVATE_VAR
+     faceNormalPrivate.push_back(normal);
+#else
+       _faceNormal[i] = normal;
+#endif
 
       const Face& f = _object.faces()[i];
       {
@@ -88,10 +108,22 @@ OpenMPNormalCalculation::calculate()
     }
 
 #pragma omp for schedule(static)
-    for (size_t i = 0; i < vertexCount; ++i)
-      if (nbVertex[i] > 0)
-        vertexNormalPrivate.push_back(sumVertex[i] / nbVertex[i]);
+    for (size_t i = 0; i < vertexCount; ++i) {
+      if (nbVertex[i] > 0) {
+#ifdef OPENMPNORMALCALCULATION_USE_PRIVATE_VAR
+          vertexNormalPrivate.push_back(sumVertex[i] / nbVertex[i]);
+#else
+          _vertexNormal[i] = sumVertex[i] / nbVertex[i];
+#endif
+      } else {
+#ifdef OPENMPNORMALCALCULATION_USE_PRIVATE_VAR
+          throw std::runtime_error("nbVertex = 0");
+          vertexNormalPrivate.push_back(Vector());
+#endif
+      }
+    }
 
+#ifdef OPENMPNORMALCALCULATION_USE_PRIVATE_VAR
 #pragma omp for schedule(static) ordered
     for (int i = 0; i < omp_get_num_threads(); ++i) {
 #pragma omp ordered
@@ -101,5 +133,6 @@ OpenMPNormalCalculation::calculate()
                            vertexNormalPrivate.begin(),
                            vertexNormalPrivate.end());
     }
+#endif
   }
 }

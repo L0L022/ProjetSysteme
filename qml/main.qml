@@ -35,11 +35,12 @@ ApplicationWindow {
                 iconName: "template"
 
                 Instantiator {
-                    model: ["truc.off", "machin.off"]
+                    model: assets
 
                     MenuItem {
                         text: modelData
                         iconName: "template"
+                        onTriggered: obj.readOFF(":/assets/"+modelData)
                     }
 
                     onObjectAdded: exampleMenu.insertItem(index, object)
