@@ -62,7 +62,7 @@ OpenMPNormalCalculation::calculate()
 #pragma omp for schedule(static)
     for (size_t i = 0; i < facesCount; ++i) {
       const Face& f = _object.faces()[i];
-      const Vector &v0 = _object.vertices()[f.v0],
+      const Vertex &v0 = _object.vertices()[f.v0],
                    &v1 = _object.vertices()[f.v1],
                    &v2 = _object.vertices()[f.v2];
       Vector normal = Vector(v0, v1) ^ Vector(v0, v2);
@@ -85,8 +85,7 @@ OpenMPNormalCalculation::calculate()
         }
       }
 
-      normal.normalize(1);
-      _faceNormal[i] = normal;
+      _faceNormal[i] = normal.normalize(1);
     }
 
 #pragma omp for schedule(static)
