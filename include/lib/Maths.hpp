@@ -7,6 +7,9 @@
 
 namespace lib { namespace Maths {
 
+long double
+angle_between_vectors(const Vector& v1, const Vector& v2);
+
 Vector
 normal(const Object& obj, const size_t iFace);
 

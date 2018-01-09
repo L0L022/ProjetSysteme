@@ -31,7 +31,15 @@ main(int argc, char* argv[])
     return -1;
   }
 
+  int precision = std::numeric_limits<long double>::max_digits10;
+  cout.precision(precision);
+  cin.precision(precision);
+  cout.setf(std::ios_base::fixed, std::ios_base::floatfield);
+  cin.setf(std::ios_base::fixed, std::ios_base::floatfield);
+
   ifstream file(argv[1], std::ios::binary);
+  file.precision(precision);
+  file.setf(std::ios_base::fixed, std::ios_base::floatfield);
 
   if (!file.is_open()) {
     printHelp();
@@ -40,10 +48,9 @@ main(int argc, char* argv[])
   }
 
   stringstream ss;
+  ss.precision(precision);
+  ss.setf(std::ios_base::fixed, std::ios_base::floatfield);
   ss << file.rdbuf();
-
-  cout.precision(std::numeric_limits<double>::digits10 + 1);
-  cin.precision(std::numeric_limits<double>::digits10 + 1);
 
   Object obj = Object::readOFF(ss);
 
@@ -56,8 +63,12 @@ main(int argc, char* argv[])
     string strMethod(argv[2]);
     if (strMethod == "sequential")
       method = NormalCalculation::Method::Sequential;
-    if (strMethod == "pthread") method = NormalCalculation::Method::pThread;
-    if (strMethod == "openmp") method = NormalCalculation::Method::OpenMP;
+    else if (strMethod == "pthread")
+      method = NormalCalculation::Method::pThread;
+    else if (strMethod == "openmp")
+      method = NormalCalculation::Method::OpenMP;
+    else
+      cerr << "Unknown method use default instead.\n";
   }
 
   if (argc == 4) {
@@ -73,6 +84,8 @@ main(int argc, char* argv[])
     calc->calculate();
 
     ofstream f("truc.obj", std::ios::binary | std::ios::out);
+    f.precision(precision);
+    f.setf(std::ios_base::fixed, std::ios_base::floatfield);
     obj.writeOBJ(f, calc->vertexNormal());
   } else {
     printHelp();

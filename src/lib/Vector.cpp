@@ -1,19 +1,19 @@
 #include <cmath>
-#include <lib/Vertex.hpp>
 #include <lib/Vector.hpp>
+#include <lib/Vertex.hpp>
 
 using namespace lib;
 
 Vector::Vector()
 {
   // modif RR, 05/12/2006, passage 0.0 -> 0.0f
-  x = 0.0f;
-  y = 0.0f;
-  z = 0.0f;
+  x = 0.0;
+  y = 0.0;
+  z = 0.0;
 }
 
-// modif RR 02/12/2006, parametre const double -> const double&
-Vector::Vector(const double& X, const double& Y, const double& Z)
+// modif RR 02/12/2006, parametre const long double -> const long double&
+Vector::Vector(const long double& X, const long double& Y, const long double& Z)
 {
   x = X;
   y = Y;
@@ -138,7 +138,7 @@ Vector::operator-=(const Vector& op)
 }
 
 Vector&
-Vector::operator*=(const double op)
+Vector::operator*=(const long double op)
 {
   x *= op;
   y *= op;
@@ -146,13 +146,13 @@ Vector::operator*=(const double op)
   return *this;
 }
 
-Vector Vector::operator*(const double op) const
+Vector Vector::operator*(const long double op) const
 {
   return (Vector(x * op, y * op, z * op));
 }
 
 Vector&
-Vector::operator/=(const double op)
+Vector::operator/=(const long double op)
 {
   x /= op;
   y /= op;
@@ -161,12 +161,12 @@ Vector::operator/=(const double op)
 }
 
 Vector
-Vector::operator/(const double op) const
+Vector::operator/(const long double op) const
 {
   return (Vector(x / op, y / op, z / op));
 }
 
-double Vector::operator*(const Vector& op) const
+long double Vector::operator*(const Vector& op) const
 {
   return (x * op.x + y * op.y + z * op.z);
 }
@@ -189,9 +189,9 @@ Vector::operator^(const Vector& op) const
 }
 
 Vector
-Vector::normalize(const double lg)
+Vector::normalize(const long double lg)
 {
-  double lgtemp;
+  long double lgtemp;
   if (x != 0 || y != 0 || z != 0) {
     lgtemp = sqrt(x * x + y * y + z * z);
     lgtemp = lg / lgtemp;
@@ -202,8 +202,8 @@ Vector::normalize(const double lg)
   return (*this);
 }
 
-double
-Vector::length()
+long double
+Vector::length() const
 {
   return (sqrt(x * x + y * y + z * z));
 }
@@ -222,4 +222,4 @@ operator>>(std::istream& is, Vector& v)
   return is >> v.x >> v.y >> v.z;
 }
 
-}
+} // namespace lib

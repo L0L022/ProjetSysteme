@@ -1,6 +1,6 @@
 #include <iostream>
-#include <lib/Vertex.hpp>
 #include <lib/Vector.hpp>
+#include <lib/Vertex.hpp>
 
 using namespace lib;
 using namespace std;
@@ -8,23 +8,25 @@ using namespace std;
 /*!
  *   \brief constructeur sans paramètres
  *   \todo none
- *   \note RR: modif 19/12/2006 : =0 -> =0.0 pour les doubles
+ *   \note RR: modif 19/12/2006 : =0 -> =0.0 pour les long doubles
  */
 Vertex::Vertex()
   : x(0.0)
   , y(0.0)
   , z(0.0)
-{}
+{
+}
 
 /*!
- *   \brief constructeur à partir de 3 réels (double)
+ *   \brief constructeur à partir de 3 réels (long double)
  *   \todo none
  */
-Vertex::Vertex(const double x, const double y, const double z)
+Vertex::Vertex(const long double x, const long double y, const long double z)
   : x(x)
   , y(y)
   , z(z)
-{}
+{
+}
 
 /*!
  *   \brief constructeur de copie
@@ -34,7 +36,8 @@ Vertex::Vertex(const Vertex& p)
   : x(p.x)
   , y(p.y)
   , z(p.z)
-{}
+{
+}
 
 /*!
  *   \brief constructeur de copie de vecteur3
@@ -44,7 +47,8 @@ Vertex::Vertex(const Vector& v)
   : x(v.x)
   , y(v.y)
   , z(v.z)
-{}
+{
+}
 
 /*!
  *   \brief destructeur
@@ -139,7 +143,7 @@ Vertex::operator-(const Vertex& p) const
  *   \todo none
  */
 Vertex&
-Vertex::operator*=(const double n)
+Vertex::operator*=(const long double n)
 {
   x *= n;
   y *= n;
@@ -152,7 +156,7 @@ Vertex::operator*=(const double n)
  *   \brief multiplication par un scalaire (mise à l'échelle)
  *   \todo none
  */
-Vertex Vertex::operator*(const double n) const
+Vertex Vertex::operator*(const long double n) const
 {
   return Vertex(x * n, y * n, z * n);
 }
@@ -163,7 +167,7 @@ Vertex Vertex::operator*(const double n) const
  *   \note RR: modif 19/12/2006 : test sur op!=0
  */
 Vertex&
-Vertex::operator/=(const double n)
+Vertex::operator/=(const long double n)
 {
   if (n == 0.0) throw runtime_error("Division by zero");
 
@@ -179,7 +183,7 @@ Vertex::operator/=(const double n)
  *   \todo none
  */
 Vertex
-Vertex::operator/(const double n) const
+Vertex::operator/(const long double n) const
 {
   if (n == 0.0) throw runtime_error("Division by zero");
 
@@ -261,4 +265,4 @@ operator>>(istream& p, Vertex& op)
   return p >> op.x >> op.y >> op.z;
 }
 
-}
+} // namespace lib

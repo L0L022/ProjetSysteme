@@ -10,12 +10,12 @@ class Vector;
 class Vertex
 {
 public:
-  double x;
-  double y;
-  double z;
+  long double x;
+  long double y;
+  long double z;
 
   Vertex();
-  Vertex(const double x, const double y, const double z);
+  Vertex(const long double x, const long double y, const long double z);
   Vertex(const Vertex&);
   Vertex(const Vector&);
   ~Vertex();
@@ -34,11 +34,11 @@ public:
   Vertex operator*(const Vertex&)const;
   Vertex& operator*=(const Vertex&);
 
-  Vertex operator*(const double)const;
-  Vertex& operator*=(const double);
+  Vertex operator*(const long double)const;
+  Vertex& operator*=(const long double);
 
-  Vertex operator/(const double) const;
-  Vertex& operator/=(const double);
+  Vertex operator/(const long double) const;
+  Vertex& operator/=(const long double);
 
   Vertex operator/(const Vertex&) const;
   Vertex& operator/=(const Vertex&);

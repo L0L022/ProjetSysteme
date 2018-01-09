@@ -3,6 +3,7 @@
 
 #include <QDebug>
 #include <fstream>
+#include <limits>
 #include <memory>
 #include <string>
 
@@ -35,7 +36,10 @@ TestNormalCalculation::calculate()
   QFETCH(std::string, fileName);
   QFETCH(lib::NormalCalculation::Method, method);
 
+  int precision = std::numeric_limits<long double>::max_digits10;
+
   std::ifstream file(fileName);
+  file.precision(precision);
   lib::Object object = lib::Object::readOFF(file);
 
   lib::SequentialNormalCalculation seq(object);
@@ -45,25 +49,19 @@ TestNormalCalculation::calculate()
   seq.calculate();
   nc->calculate();
 
-//  qDebug() << seq.faceNormal().size() << seq.vertexNormal().size();
-//  qDebug() << nc->faceNormal().size() << nc->vertexNormal().size();
-
-  //for (size_t i = 0; i < seq.vertexNormal().size(); ++i)
-   //   std::cout << seq.vertexNormal()[i] << " <-> " << nc->vertexNormal()[i] << "\n";
-
   QCOMPARE(seq.faceNormal().size(), nc->faceNormal().size());
   QCOMPARE(seq.vertexNormal().size(), nc->vertexNormal().size());
 
   for (size_t i = 0; i < seq.faceNormal().size(); ++i) {
-      QCOMPARE(seq.faceNormal()[i].x+1, nc->faceNormal()[i].x+1);
-      QCOMPARE(seq.faceNormal()[i].y+1, nc->faceNormal()[i].y+1);
-      QCOMPARE(seq.faceNormal()[i].z+1, nc->faceNormal()[i].z+1);
+    QCOMPARE(seq.faceNormal()[i].x + 1, nc->faceNormal()[i].x + 1);
+    QCOMPARE(seq.faceNormal()[i].y + 1, nc->faceNormal()[i].y + 1);
+    QCOMPARE(seq.faceNormal()[i].z + 1, nc->faceNormal()[i].z + 1);
   }
 
   for (size_t i = 0; i < seq.vertexNormal().size(); ++i) {
-      QCOMPARE(seq.vertexNormal()[i].x+1, nc->vertexNormal()[i].x+1);
-      QCOMPARE(seq.vertexNormal()[i].y+1, nc->vertexNormal()[i].y+1);
-      QCOMPARE(seq.vertexNormal()[i].z+1, nc->vertexNormal()[i].z+1);
+    QCOMPARE(seq.vertexNormal()[i].x + 1, nc->vertexNormal()[i].x + 1);
+    QCOMPARE(seq.vertexNormal()[i].y + 1, nc->vertexNormal()[i].y + 1);
+    QCOMPARE(seq.vertexNormal()[i].z + 1, nc->vertexNormal()[i].z + 1);
   }
 }
 
