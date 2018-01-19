@@ -10,7 +10,7 @@
 
 namespace lib {
 
-class Object
+class Object // représente un maillage 3d
 {
 public:
   Object() = default;

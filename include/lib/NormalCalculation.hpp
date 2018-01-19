@@ -7,7 +7,8 @@
 
 namespace lib {
 
-class NormalCalculation
+class NormalCalculation // permet de calculer les vecteurs normaux des faces et
+                        // des sommets
 {
 public:
   enum class Method

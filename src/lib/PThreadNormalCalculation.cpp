@@ -9,7 +9,8 @@ using namespace lib;
 
 class LockGuard;
 
-class Mutex
+class Mutex // permet de verouiller des données pour éviter des "colisions"
+            // lorsque 2 threads travaillent simultanément sur la même variable.
 {
 public:
   Mutex() { pthread_mutex_init(&_m, NULL); }
