@@ -53,15 +53,15 @@ TestNormalCalculation::calculate()
   QCOMPARE(seq.vertexNormal().size(), nc->vertexNormal().size());
 
   for (size_t i = 0; i < seq.faceNormal().size(); ++i) {
-    QCOMPARE(seq.faceNormal()[i].x + 1, nc->faceNormal()[i].x + 1);
-    QCOMPARE(seq.faceNormal()[i].y + 1, nc->faceNormal()[i].y + 1);
-    QCOMPARE(seq.faceNormal()[i].z + 1, nc->faceNormal()[i].z + 1);
+    QCOMPARE(1.0 + seq.faceNormal()[i].x, 1.0 + nc->faceNormal()[i].x);
+    QCOMPARE(1.0 + seq.faceNormal()[i].y, 1.0 + nc->faceNormal()[i].y);
+    QCOMPARE(1.0 + seq.faceNormal()[i].z, 1.0 + nc->faceNormal()[i].z);
   }
 
   for (size_t i = 0; i < seq.vertexNormal().size(); ++i) {
-    QCOMPARE(seq.vertexNormal()[i].x + 1, nc->vertexNormal()[i].x + 1);
-    QCOMPARE(seq.vertexNormal()[i].y + 1, nc->vertexNormal()[i].y + 1);
-    QCOMPARE(seq.vertexNormal()[i].z + 1, nc->vertexNormal()[i].z + 1);
+    QCOMPARE(1.0 + seq.vertexNormal()[i].x, 1.0 + nc->vertexNormal()[i].x);
+    QCOMPARE(1.0 + seq.vertexNormal()[i].y, 1.0 + nc->vertexNormal()[i].y);
+    QCOMPARE(1.0 + seq.vertexNormal()[i].z, 1.0 + nc->vertexNormal()[i].z);
   }
 }
 

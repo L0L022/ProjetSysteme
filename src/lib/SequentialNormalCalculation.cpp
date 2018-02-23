@@ -35,7 +35,7 @@ SequentialNormalCalculation::calculate()
         _faceNormal[i] * Maths::angle_between_vectors(v2 - v0, v2 - v1);
     }
 
-    _faceNormal[i] = _faceNormal[i].normalize(1);
+    _faceNormal[i].normalize(1);
   }
 
   for (size_t i = 0; i < vertexCount; ++i) {

@@ -66,7 +66,7 @@ normalCalc(void* arg)
                  &v2 = _object.vertices()[f.v2];
     Vector normal = Vector(v0, v1) ^ Vector(v0, v2);
 
-    if (!(_faceNormal[i] == Vector())) {
+    if (!(normal == Vector())) {
       {
         LockGuard lg(vMutex[f.v0]);
         _vertexNormal[f.v0] +=

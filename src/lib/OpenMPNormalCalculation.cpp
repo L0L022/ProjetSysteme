@@ -56,7 +56,7 @@ OpenMPNormalCalculation::calculate()
   std::deque<Mutex> vMutex(vertexCount);
 
 #pragma omp parallel default(none)                                             \
-  shared(_object, vMutex, _faceNormal, _vertexNormal)
+  shared(vMutex, _object, _faceNormal, _vertexNormal)
   {
 
 #pragma omp for schedule(static)
@@ -65,9 +65,11 @@ OpenMPNormalCalculation::calculate()
       const Vertex &v0 = _object.vertices()[f.v0],
                    &v1 = _object.vertices()[f.v1],
                    &v2 = _object.vertices()[f.v2];
+      //_faceNormal[i] = Vector(v0, v1) ^ Vector(v0, v2);
       Vector normal = Vector(v0, v1) ^ Vector(v0, v2);
+      // Vector& normal = _faceNormal[i];
 
-      if (!(_faceNormal[i] == Vector())) {
+      if (!(normal == Vector())) {
         {
           LockGuard lg(vMutex[f.v0]);
           _vertexNormal[f.v0] +=
